@@ -59,11 +59,11 @@ __global__ void convolution_3D_const_mem_tiling_kernel(float *N, float *P, int w
         for (int fRow = 0; fRow < 2*FILTER_RADIUS + 1; fRow++) {
             for (int fCol; fCol < 2*FILTER_RADIUS + 1; fCol++) {
                 for (int fSlice; fSlice < 2*FILTER_RADIUS + 1; fSlice++) {
-                    pValue += F_3D[fRow][fCol][fSlice] * N_s[tileRow+fRow][tileCol+fCol][tileSlice+fSlice];
+                    pValue += F_3D[fSlce][fRow][fCol] * N_S[slice*length*width + inRow*width + inCol];
                 }
             }
         }
-        P[row*width*length+col*length+slice] = pValue;
+        P[slice*width*length+row*width+col] = pValue;
         }
     }
 }

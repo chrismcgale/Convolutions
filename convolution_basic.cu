@@ -28,10 +28,10 @@ __global__ void convolution_3D_basic_kernel(float *N, float *F, float *P, int r,
                 int inCol = outCol - r + fCol;
                 int inSlice = outSlice - r + fSlice;
                 if (inRow >= 0 && inRow < length && inCol >= 0 && inCol < width && inSlice >= 0 && inSlice < height) {
-                    pValue += F[fRow][fCol][fSlice] * N[inRow*length*width + inCol*width + slice];
+                    pValue += F[fSlce][fRow][fCol] * N[slice*length*width + inRow*width + inCol];
                 }
             }
         }
     }
-    P[outRow][outCol][outSlice] = pValue;
+    P[outSlice][outRow][outCol] = pValue;
 }

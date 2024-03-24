@@ -30,10 +30,10 @@ __global__ void convolution_3D_const_mem_kernel(float *N, float *P, int width, i
                 int inCol = outCol - FILTER_RADIUS + fCol;
                 int inSlice = outSlice - FILTER_RADIUS + fSlice;
                 if (inRow >= 0 && inRow < length && inCol >= 0 && inCol < width && inSlice >= 0 && inSlice < height) {
-                    pValue += F_3D[fRow][fCol][fSlice] * N[inRow*length*width + inCol*width + slice];
+                    pValue += F_3D[fSlce][fRow][fCol] * N[slice*length*width + inRow*width + inCol];
                 }
             }
         }
     }
-    P[outRow][outCol][outSlice] = pValue;
+    P[outSlice][outRow][outCol] = pValue;
 }
