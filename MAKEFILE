@@ -1,0 +1,40 @@
+# Compiler options
+CC := g++
+NVCC := nvcc
+CFLAGS := -std=c++11 -O3
+LDFLAGS := -lcudart
+
+# Source files
+SRCS := main.cpp convolution_kernel.cu
+
+# Object files
+OBJS := $(SRCS:.cpp=.o) $(SRCS:.cu=.o)
+
+# Target executable
+TARGET := my_program
+
+# Build rule for CUDA files
+%.o: %.cu
+    $(NVCC) $(CFLAGS) -c $< -o $@
+
+# Build rule for C++ files
+%.o: %.cpp
+    $(CC) $(CFLAGS) -c $< -o $@
+
+# Default target
+all: $(TARGET)
+
+# Linking the target executable
+$(TARGET): $(OBJS)
+    $(NVCC) $(LDFLAGS) $(OBJS) -o $(TARGET)
+
+# Clean rule
+clean:
+    rm -f $(OBJS) $(TARGET)
+
+# Run rule
+run:
+    ./$(TARGET)
+
+# Phony targets
+.PHONY: all clean run
