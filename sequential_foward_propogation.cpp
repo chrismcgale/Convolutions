@@ -5,7 +5,7 @@ float sigmoid(float x) {
 }
 
 
-// Foward propogation path of a convolutional layer
+// Forward propogation path of a convolutional layer
 
 // M is the number of output feature maps
 // C is the number of input feature maps
@@ -15,18 +15,20 @@ float sigmoid(float x) {
 // X stores the input feature map and is a [C x H x W] array
 // Y stores the filter banks and is a [M x C x K x K] array
 // Z stores the output feature maps and is a [M x (H - K + 1) x (W - K + 1)] array
-void convlayer_forward_sequential(int M, int C, int H, int W, int K, float* X, float* Y, float* Z) {
+void convlayer_forward_sequential(int N, int M, int C, int H, int W, int K, float* X, float* Y, float* Z) {
     int H_out = H - K + 1;
     int W_out = W - K + 1;
 
-    for (int m = 0; m < M; m++) {                   // for each output feature map
-        for (int h = 0; h < H_out; h++) {           // for each output element
-            for (int w = 0; w < W_out; w++) {
-                Z[m * H_out * W + h * W + w] = 0;       // Y[m, h, w]
-                for (int c = 0; c < C; c++) {       // Sum over all input feature maps
-                    for (int p = 0; p < K; p++) {   // KxK filter
-                        for (int q = 0; q < K; q++) {
-                            Z[m * H * W + h * W + w] += X[c * H * W + (h + p) * W + (w + q)] * Y[m * C * K * K + c * K * K + p * K + q];
+    for (int n = 0; n < N; n++) {                       // for each sample in the mini-batch
+        for (int m = 0; m < M; m++) {                   // for each output feature map
+            for (int h = 0; h < H_out; h++) {           // for each output element
+                for (int w = 0; w < W_out; w++) {
+                    Z[n * M * H_out * W_out + m * H_out * W_out + h * W_out + w] = 0;       // Z[n, m, h, w]
+                    for (int c = 0; c < C; c++) {       // Sum over all input feature maps
+                        for (int p = 0; p < K; p++) {   // KxK filter
+                            for (int q = 0; q < K; q++) {
+                                Z[n * M * H_out * W_out + m * H_out * W_out + h * W_out + w] += X[n * C * H * W + c * H * W + (h + p) * W + (w + q)] * Y[m * C * K * K + c * K * K + p * K + q];
+                            }
                         }
                     }
                 }
@@ -35,7 +37,7 @@ void convlayer_forward_sequential(int M, int C, int H, int W, int K, float* X, f
     }
 }
 
-// Foward propogation of a subsampling layer
+// Forward propogation of a subsampling layer
 
 // M is the number of output feature maps
 // H is the height of each input feature map, divisible by K
