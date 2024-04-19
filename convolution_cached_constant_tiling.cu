@@ -10,7 +10,7 @@ __global__ void convolution_2D_cached_const_mem_tiling_kernel(float *N, float *P
     int col = blockIdx.x*TILE_DIM + threadIdx.x;
     int row = blockIdx.y*TILE_DIM + threadIdx.y;
 
-    __shared__ N_s[TILE_DIM][TILE_DIM];
+    extern __shared__ float N_s[TILE_DIM][TILE_DIM];
 
     // Load tile into shared memory
     if (row < length && col < width) {

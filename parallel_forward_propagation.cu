@@ -26,7 +26,7 @@ int convLayer_parallel_forward_propagation(int N, int M, int C, int H, int W, in
                 cudaMemcpy(X_d, X, x_size, cudaMemcpyHostToDevice);
                 cudaMemcpy(Y_d, Y, y_size, cudaMemcpyHostToDevice);
 
-                ConvLayerForward_Kernel<<< gridDim, blockDim >>> (C, W_grid, K, X_d, W_d, Y_d);
+                ConvLayerForward_Kernel<<< gridDim, blockDim >>>(C, W_grid, K, X_d, W_d, Y_d);
 
                 cudaMemcpy(Z, Z_d, z_size, cudaMemcpyDeviceToHost);
 
@@ -38,6 +38,8 @@ int convLayer_parallel_forward_propagation(int N, int M, int C, int H, int W, in
     }
 }
 
+// TO DO: CONSUMES TOO MUCH GMB
+// ADD CONSTANT MEM CACHING AND TILING
 __global__ void ConvLayer_forward_Kernel(int C, int W_grid, int K, float* X, float* Y, float* Z) {
     int m = blockIdx.x;
     int h = (blockIdx.y / W_grid)*TILE_WIDTH + threadIdx.y;

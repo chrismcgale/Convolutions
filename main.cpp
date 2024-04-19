@@ -1,8 +1,12 @@
 #include <iostream>
 #include <cstdlib>
-#include <cuda_runtime.h>
+#include <algorithm>
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
+#include "device_functions.h"
 
-#include "convolution_kernel.h"
+#include "convolution_cached_constant_tiling.cu"
+
 
 
 int main() {
@@ -55,3 +59,5 @@ int main() {
 
     return 0;
 }
+
+
